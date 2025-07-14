@@ -1,20 +1,22 @@
-# 🔗 LinkShrinker - URL Shortener App
+# 🔗 LinkShrinker - Frontend-Only URL Shortener
 
-A user-friendly, password-protected URL Shortener web application built with **React (TypeScript)** and **Vite**, designed as part of a campus hiring evaluation. This frontend-only application simulates the behavior of a full-stack URL shortener using mock data and advanced UI components.
-
-## 🚀 Features
-
-- 🔐 Password-protected shortened links
-- 📊 Click analytics tracking
-- 📋 Copy-to-clipboard functionality
-- ✅ Visual feedback on interactions
-- 🧾 List of created links with status and metadata
-- 🧠 Intelligent UX handling (loading spinners, error states)
-- 🌐 Mobile-responsive UI
+A user-friendly, password-protected URL Shortener web application built with **React (TypeScript)** and **Vite**, developed as part of a campus hiring evaluation. This frontend-only application simulates a full URL shortening experience using in-memory data and interactive UI components.
 
 ---
 
-## 📁 Project Structure
+## 🚀 Features
+
+- 🔐 Password-protected short links
+- 📊 Click analytics tracking (simulated)
+- 📋 Copy-to-clipboard functionality
+- ✅ Visual feedback on interactions (e.g., "Copied!")
+- 📜 Display list of created links with metadata
+- 🧠 Smart UX with loading spinners, error states
+- 📱 Fully responsive design
+
+---
+
+## 📁 Folder Structure
 
 frontend/
 ├── public/
@@ -59,43 +61,37 @@ npm install
 
 # Start the development server
 npm run dev
-🔧 Configuration
-You can set environment variables (e.g., backend URL) in a .env file:
+Running App
+After starting the dev server, open your browser and go to:
 
-ini
+arduino
 Copy
 Edit
-VITE_BACKEND_URL=http://localhost:5000
-Update API endpoints in components accordingly to match backend behavior.
+http://localhost:3000
+💡 Usage
+Enter any long URL to generate a short version.
 
-🧪 Testing the App
-This frontend simulates behavior using in-memory state. For full integration:
+(Optional) Add password protection.
 
-Connect to a real backend with API routes like:
+View all shortened URLs in a list with click counts.
 
-POST /api/shorten
+Use "Copy" button to copy the short URL easily.
 
-GET /api/:shortUrl
+If password protected, a modal will appear to unlock the URL.
 
-POST /api/verify-password
 
-📸 Screenshots
-Home (URL Input)	Shortened Link	Password Modal
-
-🛠 Technologies Used
-React (TypeScript)
+🛠 Built With
+React + TypeScript
 
 Vite
 
-Material UI Icons
+CSS (custom)
 
-Custom SVG Icons & Styling
+Material UI Icons
 
 Clipboard API
 
-Local state management
-
 ✍️ Author
 Nitish Pandey
-🔗 LinkedIn
-📧 Email
+📧 Email: nitishkumarpandey05@gmail.com
+🔗 LinkedIn: https://www.linkedin.com/in/nitishpandey335
