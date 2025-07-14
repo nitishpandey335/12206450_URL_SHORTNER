@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './App.css';
+import { Container, Box, CircularProgress, CssBaseline } from '@mui/material';
 import AuthForm from './components/AuthForm';
 import Navbar from './components/Navbar';
 import Analytics from './components/Analytics';
@@ -60,12 +60,10 @@ function App() {
     setUrls([]);
   };
 
-  // Add newly created URL
   const handleNewShortUrl = (newUrl: Url) => {
     setUrls((prev) => [newUrl, ...prev]);
   };
 
-  // Load default URLs (optional dummy data)
   const handleUrlsRefresh = () => {
     const dummyUrls: Url[] = [
       {
@@ -76,8 +74,8 @@ function App() {
         createdAt: new Date().toISOString(),
         isPasswordProtected: false,
         isActive: true,
-        passwordAttempts: 0
-      }
+        passwordAttempts: 0,
+      },
     ];
     setUrls(dummyUrls);
   };
@@ -89,28 +87,53 @@ function App() {
   }, [user]);
 
   if (!user) {
-    return <AuthForm onAuth={handleAuth} isLoading={isLoading} error={authError} />;
+    return (
+      <>
+        <CssBaseline />
+        <Box
+          sx={{
+            display: 'flex',
+            height: '100vh',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: '#f5f5f5',
+          }}
+        >
+          <AuthForm onAuth={handleAuth} isLoading={isLoading} error={authError} />
+        </Box>
+      </>
+    );
   }
 
   return (
-    <div className="app">
+    <>
+      <CssBaseline />
       <Navbar user={user} onLogout={handleLogout} />
+      <Box sx={{ py: 4, bgcolor: '#fafafa', minHeight: '100vh' }}>
+        <Container maxWidth="md">
+          {isLoading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+              <CircularProgress />
+            </Box>
+          )}
 
-      <div className="main-content">
-        <div className="container">
           <UrlShortener
             onUrlShortened={handleNewShortUrl}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
-            token="dummy_token" // For now, token is not used
+            token="dummy_token"
           />
 
-          <Analytics urls={urls} />
+          <Box sx={{ mt: 4 }}>
+            <Analytics urls={urls} />
+          </Box>
 
-          <UrlList urls={urls} />
-        </div>
-      </div>
-    </div>
+          <Box sx={{ mt: 4 }}>
+            <UrlList urls={urls} />
+          </Box>
+        </Container>
+      </Box>
+    </>
   );
 }
 

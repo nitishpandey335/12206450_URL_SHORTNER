@@ -1,5 +1,18 @@
 import { useState } from 'react';
-import './UrlShortener.css';
+import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  FormControlLabel,
+  Switch,
+  Collapse,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  Stack,
+} from '@mui/material';
 
 interface Url {
   _id: string;
@@ -23,12 +36,13 @@ export default function UrlShortener({
   onUrlShortened,
   isLoading,
   setIsLoading,
-  token
+  token,
 }: UrlShortenerProps) {
   const [originalUrl, setOriginalUrl] = useState('');
-  const [recentlyShortened, setRecentlyShortened] = useState<string | null>(null);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
   const [password, setPassword] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarUrl, setSnackbarUrl] = useState('');
 
   const generateShortUrl = () => {
     const code = Math.random().toString(36).substring(2, 8);
@@ -37,10 +51,9 @@ export default function UrlShortener({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!originalUrl) return;
+    if (!originalUrl.trim()) return;
 
     setIsLoading(true);
-    setRecentlyShortened(null);
 
     try {
       const shortUrl = generateShortUrl();
@@ -52,89 +65,102 @@ export default function UrlShortener({
         createdAt: new Date().toISOString(),
         isPasswordProtected,
         isActive: true,
-        passwordAttempts: 0
+        passwordAttempts: 0,
       };
 
       setOriginalUrl('');
       setPassword('');
       setIsPasswordProtected(false);
-      setRecentlyShortened(shortUrl);
-      onUrlShortened(newUrl);
 
-      setTimeout(() => {
-        setRecentlyShortened(null);
-      }, 5000);
-    } catch (error) {
-      console.error('Error:', error);
+      onUrlShortened(newUrl);
+      setSnackbarUrl(shortUrl);
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error('URL Shortening Error:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const copyToClipboard = async (url: string) => {
+  const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(url);
-    } catch (error) {
-      console.error('Failed to copy:', error);
+      await navigator.clipboard.writeText(snackbarUrl);
+    } catch (err) {
+      console.error('Clipboard error:', err);
     }
   };
 
   return (
-    <div className="url-shortener">
-      <div className="shortener-header">
-        <h2>Create Short Link</h2>
-        <p>Transform your long URLs into short, shareable links</p>
-      </div>
+    <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
+      <Typography variant="h5" gutterBottom>
+        Create Short Link
+      </Typography>
+      <Typography variant="body2" color="text.secondary" mb={2}>
+        Transform your long URLs into short, shareable links.
+      </Typography>
 
-      <form onSubmit={handleSubmit} className="shortener-form">
-        <div className="input-container">
-          <div className="input-wrapper">
-            <input
-              type="url"
-              value={originalUrl}
-              onChange={(e) => setOriginalUrl(e.target.value)}
-              placeholder="https://example.com/your-url"
-              required
-              className="url-input"
-            />
-            <button type="submit" disabled={isLoading || !originalUrl} className="shorten-btn">
-              {isLoading ? <div className="loading-spinner" /> : <>Shorten</>}
-            </button>
-          </div>
-        </div>
+      <Box component="form" onSubmit={handleSubmit}>
+        <Stack spacing={2}>
+          <TextField
+            label="Original URL"
+            variant="outlined"
+            type="url"
+            value={originalUrl}
+            onChange={(e) => setOriginalUrl(e.target.value)}
+            required
+            fullWidth
+          />
 
-        <div className="password-section">
-          <label className="toggle-container">
-            <input
-              type="checkbox"
-              checked={isPasswordProtected}
-              onChange={(e) => setIsPasswordProtected(e.target.checked)}
-            />
-            <span>Password Protect</span>
-          </label>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isPasswordProtected}
+                onChange={(e) => setIsPasswordProtected(e.target.checked)}
+              />
+            }
+            label="Password Protect"
+          />
 
-          {isPasswordProtected && (
-            <input
+          <Collapse in={isPasswordProtected}>
+            <TextField
+              label="Password"
               type="password"
+              variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              required
-              className="password-input"
+              fullWidth
+              required={isPasswordProtected}
             />
-          )}
-        </div>
-      </form>
+          </Collapse>
 
-      {recentlyShortened && (
-        <div className="success-message">
-          <h3>Shortened URL:</h3>
-          <div className="shortened-url-container">
-            <span>{recentlyShortened}</span>
-            <button onClick={() => copyToClipboard(recentlyShortened)}>Copy</button>
-          </div>
-        </div>
-      )}
-    </div>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={isLoading || !originalUrl.trim()}
+            startIcon={isLoading ? <CircularProgress size={20} /> : undefined}
+          >
+            {isLoading ? 'Shortening...' : 'Shorten'}
+          </Button>
+        </Stack>
+      </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          severity="success"
+          action={
+            <Button color="inherit" size="small" onClick={handleCopy}>
+              Copy
+            </Button>
+          }
+          sx={{ width: '100%' }}
+        >
+          Shortened URL: {snackbarUrl}
+        </Alert>
+      </Snackbar>
+    </Paper>
   );
 }

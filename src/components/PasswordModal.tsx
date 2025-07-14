@@ -1,5 +1,20 @@
 import { useState } from 'react';
-import './PasswordModal.css';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Typography,
+  IconButton,
+  CircularProgress,
+  Stack,
+  Box,
+  Alert,
+} from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface PasswordModalProps {
   isOpen: boolean;
@@ -8,7 +23,12 @@ interface PasswordModalProps {
   onSuccess: (originalUrl: string) => void;
 }
 
-export default function PasswordModal({ isOpen, onClose, shortUrl, onSuccess }: PasswordModalProps) {
+export default function PasswordModal({
+  isOpen,
+  onClose,
+  shortUrl,
+  onSuccess,
+}: PasswordModalProps) {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -35,14 +55,14 @@ export default function PasswordModal({ isOpen, onClose, shortUrl, onSuccess }: 
       if (response.ok) {
         onSuccess(data.originalUrl);
         setPassword('');
-        setError('');
         setAttempts(0);
+        setError('');
       } else {
         setError(data.error || 'Invalid password');
         setAttempts(data.attempts || attempts + 1);
       }
-    } catch (error) {
-      console.error('Password verification error:', error);
+    } catch (err) {
+      console.error('Password verification error:', err);
       setError('Failed to verify password. Please try again.');
     } finally {
       setIsLoading(false);
@@ -56,82 +76,65 @@ export default function PasswordModal({ isOpen, onClose, shortUrl, onSuccess }: 
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="password-modal-overlay" onClick={handleClose}>
-      <div className="password-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="password-modal-header">
-          <div className="lock-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          </div>
-          <h2>Password Protected Link</h2>
-          <p>This link is password protected. Enter the password to continue.</p>
-        </div>
+    <Dialog open={isOpen} onClose={handleClose} maxWidth="xs" fullWidth>
+      <DialogTitle>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <LockIcon color="primary" />
+            <Typography variant="h6">Password Protected Link</Typography>
+          </Stack>
+          <IconButton onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
 
-        <form onSubmit={handleSubmit} className="password-form">
-          <div className="password-input-group">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              className="password-modal-input"
-              required
-              autoFocus
-            />
-            <button 
-              type="submit" 
-              disabled={isLoading || !password.trim()}
-              className="unlock-btn"
-            >
-              {isLoading ? (
-                <div className="loading-spinner-small" />
-              ) : (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                  Unlock
-                </>
-              )}
-            </button>
-          </div>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" mb={2}>
+            This link is password protected. Enter the password to continue.
+          </Typography>
+
+          <TextField
+            fullWidth
+            type="password"
+            label="Password"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoFocus
+            disabled={isLoading}
+          />
 
           {error && (
-            <div className="password-error">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" strokeWidth="2"/>
-                <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              {error}
-              {attempts > 0 && (
-                <span className="attempt-count">
-                  ({attempts} attempt{attempts > 1 ? 's' : ''})
-                </span>
-              )}
-            </div>
+            <Box mt={2}>
+              <Alert severity="error">
+                {error}{' '}
+                {attempts > 0 && (
+                  <span>({attempts} attempt{attempts > 1 ? 's' : ''})</span>
+                )}
+              </Alert>
+            </Box>
           )}
-        </form>
+        </DialogContent>
 
-        <div className="password-modal-footer">
-          <button onClick={handleClose} className="cancel-btn">
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={handleClose} disabled={isLoading}>
             Cancel
-          </button>
-        </div>
-
-        <button onClick={handleClose} className="close-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2"/>
-            <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2"/>
-          </svg>
-        </button>
-      </div>
-    </div>
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isLoading || !password.trim()}
+            startIcon={isLoading ? <CircularProgress size={16} /> : null}
+          >
+            {isLoading ? 'Unlocking...' : 'Unlock'}
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
-} 
+}
