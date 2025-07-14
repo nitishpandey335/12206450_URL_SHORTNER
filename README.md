@@ -93,5 +93,6 @@ Clipboard API
 
 ✍️ Author
 Nitish Pandey
-📧 Email: nitishkumarpandey05@gmail.com
-🔗 LinkedIn: https://www.linkedin.com/in/nitishpandey335
+📧 Email: [nitishkumarpandey05@gmail.com](mailto:nitishkumarpandey05@gmail.com)  
+🔗 LinkedIn: [https://www.linkedin.com/in/nitishpandey335](https://www.linkedin.com/in/nitishpandey335)
+
