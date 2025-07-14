@@ -1,69 +1,101 @@
-# React + TypeScript + Vite
+# 🔗 LinkShrinker - URL Shortener App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A user-friendly, password-protected URL Shortener web application built with **React (TypeScript)** and **Vite**, designed as part of a campus hiring evaluation. This frontend-only application simulates the behavior of a full-stack URL shortener using mock data and advanced UI components.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔐 Password-protected shortened links
+- 📊 Click analytics tracking
+- 📋 Copy-to-clipboard functionality
+- ✅ Visual feedback on interactions
+- 🧾 List of created links with status and metadata
+- 🧠 Intelligent UX handling (loading spinners, error states)
+- 🌐 Mobile-responsive UI
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Project Structure
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+frontend/
+├── public/
+├── src/
+│ ├── components/
+│ │ ├── Navbar.tsx
+│ │ ├── UrlShortener.tsx
+│ │ ├── UrlList.tsx
+│ │ ├── PasswordModal.tsx
+│ │ └── UrlAccess.tsx
+│ ├── App.tsx
+│ ├── main.tsx
+│ └── index.css
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+yaml
+Copy
+Edit
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧑‍💻 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Node.js (>= 18)
+- npm (>= 9)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/url-shortener-frontend.git
+
+# Navigate into the project folder
+cd url-shortener-frontend
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+🔧 Configuration
+You can set environment variables (e.g., backend URL) in a .env file:
+
+ini
+Copy
+Edit
+VITE_BACKEND_URL=http://localhost:5000
+Update API endpoints in components accordingly to match backend behavior.
+
+🧪 Testing the App
+This frontend simulates behavior using in-memory state. For full integration:
+
+Connect to a real backend with API routes like:
+
+POST /api/shorten
+
+GET /api/:shortUrl
+
+POST /api/verify-password
+
+📸 Screenshots
+Home (URL Input)	Shortened Link	Password Modal
+
+🛠 Technologies Used
+React (TypeScript)
+
+Vite
+
+Material UI Icons
+
+Custom SVG Icons & Styling
+
+Clipboard API
+
+Local state management
+
+✍️ Author
+Nitish Pandey
+🔗 LinkedIn
+📧 Email
